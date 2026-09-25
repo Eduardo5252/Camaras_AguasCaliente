@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transmisión en Vivo - Nombre de Tu Empresa</title>
+
+    <!-- Cargamos la librería HLS.js para soportar el formato .m3u8 en Chrome/Edge -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0f172a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .card {
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+        h1 {
+            margin-top: 0;
+            color: #38bdf8;
+            font-size: 24px;
+        }
+        p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        .video-container {
+            width: 100%;
+            background-color: #000000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        video {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            display: block;
+        }
+        .footer {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- Puedes cambiar este texto o poner una imagen <img> con tu logo -->
+        <h1>MONITOREO EN VIVO</h1>
+        <p>Cámara Agua Caliente — Transmisión continua para licitación pública</p>
+
+        <!-- Reproductor de Video -->
+        <div class="video-container">
+            <video id="video" controls autoplay muted playsinline></video>
+        </div>
+
+        <div class="footer">
+            © 2026 Tu Empresa — Todos los derechos reservados.
+        </div>
+    </div>
+
+    <script>
+        var video = document.getElementById('video');
+        var videoSrc = 'https://vtmvirginia.ezvizlife.com:4443/v3/openlive/BG7626702_1_1.m3u8?expire=1852515701&id=1023559917284466688&c=9246fc3de0&t=e09e7f556cb9d374c7b9b67c8b97d8f255b9643c4f2d0c2a5c985d1db08e3bb7&ev=100&u=a0a6fb5faf7e4e719591a4f064357ea4';
+
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+        }
+        else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Compatibilidad para Safari (iOS/Mac)
+            video.src = videoSrc;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        }
+    </script>
+
+</body>
+</html>
