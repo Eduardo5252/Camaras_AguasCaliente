@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitoreo en Vivo - Cámara Agua Caliente</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,17 +28,20 @@
         p { color: #94a3b8; font-size: 14px; }
         .video-container {
             width: 100%;
-            height: 550px;
+            height: 480px;
             background-color: #000000;
             border-radius: 8px;
             overflow: hidden;
             margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        iframe {
+        video {
             width: 100%;
             height: 100%;
-            border: none;
-            background-color: #000000;
+            border-radius: 8px;
+            object-fit: contain;
         }
         .footer { font-size: 12px; color: #64748b; margin-top: 15px; }
     </style>
@@ -50,13 +53,32 @@
         <p>Cámara Agua Caliente — Transmisión continua para licitación pública</p>
 
         <div class="video-container">
-            <iframe src="https://iusopen.ezviz.com/console/h5videoPlayer.html?videoUrl=https%3A%2F%2Fvtmvirginia.ezvizlife.com%3A4443%2Fv3%2Fopenlive%2FBG7626702_1_1.m3u8%3Fexpire%3D1852518878%26id%3D1023573242536255488%26c%3D9246fc3de0%26t%3Db7327516b645e9c237c068bf61301bf31a4489683f1c659e1b96f4c3f4409ee5%26ev%3D100%26u%3D8c286a5cba9e4ede80ee731db3af1312&title=Camara1&intro=undefined&coverImg=undefined" allowfullscreen></iframe>
+            <video id="video" controls autoplay playsinline muted></video>
         </div>
 
         <div class="footer">
             © 2026 Todos los derechos reservados.
         </div>
     </div>
+
+    <script>
+        var video = document.getElementById('video');
+        var videoSrc = 'https://vtmvirginia.ezvizlife.com:4443/v3/openlive/BG7626702_1_1.m3u8?expire=1852518878&id=1023573242536255488&c=9246fc3de0&t=b7327516b645e9c237c068bf61301bf31a4489683f1c659e1b96f4c3f4409ee5&ev=100&u=8c286a5cba9e4ede80ee731db3af1312';
+
+        if (Hls.isSupported()) {
+            var hls = new Hls();
+            hls.loadSource(videoSrc);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoSrc;
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        }
+    </script>
 
 </body>
 </html>
